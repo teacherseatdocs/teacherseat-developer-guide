@@ -3,7 +3,7 @@
 ## Table of contents 
 
 - Overview
-  - TeacherSeat Architecture
+  - [TeacherSeat Architecture](overview/architecture.md)
   - TeacherSeat API and SDK
   - TeacherSeat Integrations and Webhooks
 - How-Tos
