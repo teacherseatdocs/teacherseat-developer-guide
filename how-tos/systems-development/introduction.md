@@ -21,11 +21,12 @@ The Student panel is composed of two isolate web-applications:
 
 #### Student System 
 
-Represents the backend (API and business logic) for a system in the namespace of the Student Panel |
+Represents the backend (API and business logic) for a system in the namespace of the Student Panel 
 
 #### Student Interface 
 
-- The student interface is the visual representation of the Student Panel.
+Represents the visual representation (frontend) of the Student Panel.
+
 - The default student interfaces are built using the [Dilithium](https://github.com/ExamProCo/dilithium.js) javascript web-framework.
 - Any javascript framework can be used to build the frontend to your system (eg. React) because all student interfaces are isolate from each other.
 - Student Interfaces are only bound to the standards defined in their theme package. There are no hard restrictions.
@@ -42,10 +43,13 @@ Represents the backend (API and business logic( for a system in the namespace of
 
 #### Admin Interface 
 
-Represents the frontend (Design and Javascript components) for a system in the namespace of the Student Interface |
+- Admin Interfaces are always built using the [Dilithium](https://github.com/ExamProCo/dilithium.js) javascript web-framework
+- Admin Interfaces must adhere to the strict Styling and UX TeacherSeat guidelines.
 
 ### SDK System
 
+Represents the API for programmatic access for external integrations 
+
 ### System Plugins
 
-Represents the API for programmatic access for external integrations 
+Represents smallar libaries of code to be used withint a Backend Student or Admin System.
