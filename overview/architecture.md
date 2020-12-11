@@ -34,12 +34,20 @@ Traditionally with serverless compute utilizing full web-frameworks like Ruby on
 - Its now possible to upload larger packages via Lambda Containers
 - Its now easy to monitor serverless compute via CloudWatch Embedded Metrics
 
-### Considerations at scale
+### Considerations
 
-### Why aren't using Kubrenetes? 
+#### Why aren't using Kubrenetes? 
 At massive scale, utilizing a container-orchestration system such as Kubrenetes might make for better managment of services or better performance and could be a possible technical growth path. We believe utilizing serverless compute side-steps much of the operations and maintaince of a container-orchestration systems. For the very few unicorns who outgrow this architecture, you should at your scale have the money and talent to migrate your containers to your ideal architecture.
 
-### Why are you using a web-framework?
+#### Why are you using a web-framework?
 At massive scale, utilizing full web-frameworks per service domain might be sub-optiminal for performance, tighly coupling critical subsystems, case more compelxity for monitoring and maintainance. We believe utiziling full web-framework, with modestly scoped services provides greater developer agility, maintainablity and side-steps the complex architecting of orchtesting multiple functions to define a single service. For the very few unicorns who outgrow this architecture, you should at your scale have the money and talent to migrate services to your ideal architecture.
 
 ## Postgres and Shared Database
+
+### Considerations
+
+#### Why aren't you using GraphQL?
+
+#### Why aren't you using Database Per Service?
+
+#### Why are using Postgres instead of X?
