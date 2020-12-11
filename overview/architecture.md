@@ -44,13 +44,15 @@ At massive scale, utilizing full web-frameworks per service domain might be sub-
 
 ## Postgres and Shared Database
 
+Backend systems query a shared Postgres database about services using raw SQL queries. TeacherSeat has a query template library called querylet to ease the effort of composing complex queries.
+
 ### Considerations
 
 #### Why aren't you using GraphQL?
 GraphQL provides great flexbility for the data payload, so you can get back "exactly" the data you want. You'll get exactly the data you want but it might not be in the most ideal structure and you'll have to parse it client-side. We have a permissions system similar to how you would write a policy in AWS to access various resources, and this restricts (by design) the kind of data you can acccess. The effort to integrate our permissions systems which already narrows what is queryable  ensures the security of your data made the benifits flexbile queries with GraphQL negligible. The student panel when introducing custom themes with exotic components could warrent having GraphQL just for the student panel, but this theoretically concern at this time. 
 
 #### Why aren't you using a Database Per Service?
-
+Database Per Service is a micro-service pattern where each service has its own database. This means a service's data is "completely" independent from other services, schema chanages can be easily made with out affecting other services, can be deployed on its own schedule and can be scaled independently. Database per Service introduces signfincant operational and maintainance overhead, since some databases will rely on overlapping data, this relevent data must be replicated, must handle cross-database transactions and ensure data integrity. Using relational databases per service becomes costly very quickly so Database Per Service works  well when you have the budget or you adopt serverless databases like DynamoDB tables where its cost effective per table per service. Adopting serverless databases requires careful planning of schemas based on a history of past usage. Its possible in the future we'll adopt or have a migigration path for Database as a service for some or all sysytems.
 
 #### Why are using Postgres instead of X?
 - Postgres has robust features JSON and JSON functions to directly serve JSON from the database which we pass along back as a response.
