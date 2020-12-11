@@ -44,7 +44,14 @@ At massive scale, utilizing full web-frameworks per service domain might be sub-
 
 ## Postgres and Shared Database
 
-Backend systems query a shared Postgres database about services using raw SQL queries. TeacherSeat has a query template library called querylet to ease the effort of composing complex queries.
+Backend systems query a shared Postgres database about services using raw SQL queries. TeacherSeat has a query template library called querylet to ease the effort of composing complex queries. Although the database is shared amoung multiple services, tables are scopes based on services 
+
+eg. Identity and Access Management System is repsonsible for the tables that start with `iam_` such as:
+- iam_users
+- iam_groups
+- iam_roles
+- iam_policies
+
 
 ### Considerations
 
