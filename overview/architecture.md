@@ -27,12 +27,19 @@ The way our frontend (Interface) communicates with our backend (System) is via a
 
 Requests are processed and responses are returned utilizing serverless compute via AWS Lambda. The learning platform is divided into Systems. Systems are Ruby on Rails applications that are namespaced either for the Admin or Student Panel and are scoped for a very specific domain. (eg. Payments)
 
-Traditionally with serverless compute utilizing full web-frameworks like Ruby on Rails was not possible or advised for serverless architecure. However recently immprovements with AWS Lamda and open-source project now make serverless ideal for full web-framework:
+Traditionally with serverless compute utilizing full web-frameworks like Ruby on Rails was not possible or advised for serverless architecure. However recent immprovements with AWS Lamda and open-source project now make serverless ideal for full web-framework:
 
-- Its now easy to mount a Ruby on Rails projects with open-source projects like Lamby,
-- Its not easy compile libraries require native extensions via Lambda Containers
+- Its now easy to mount a Ruby on Rails projects with open-source projects like Lamby
+- Its now easy compile libraries requiring native extensions via Lambda Containers
 - Its now possible to upload larger packages via Lambda Containers
-- Its not easy to monitor serverless compute via CloudWatch Embedded Metrics
+- Its now easy to monitor serverless compute via CloudWatch Embedded Metrics
 
+### Considerations at scale
+
+### Why aren't using Kubrenetes? 
+At massive scale, utilizing a container-orchestration system such as Kubrenetes might make for better managment of services or better performance and could be a possible technical growth path. We believe utilizing serverless compute side-steps much of the operations and maintaince of a container-orchestration systems. For the very few unicorns who outgrow this architecture, you should at your scale have the money and talent to migrate your containers to your ideal architecture.
+
+### Why are you using a web-framework?
+At massive scale, utilizing full web-frameworks per service domain might be sub-optiminal for performance, tighly coupling critical subsystems, cuase more compelxity for monitoring and maintainance. We believe utiziling full web-framework, with modestly scoped services provides greater developer agility, maintainablity and side-steps the complex architecting of orchtesting multiple functions to define a single service. For the very few unicorns who outgrow this architecture, you should at your scale have the money and talent to migrate services to your ideal architecture.
 
 ## Postgres and Shared Database
