@@ -7,5 +7,11 @@
   - TeacherSeat API and SDK
   - TeacherSeat Integrations and Webhooks
 - How-Tos
-  - Systems Developmenet
+  - Systems Development
+    - Introduction
+    - Student System
+    - Student Interface
+    - Admin System
+    - Admin Interface
+    - SDK System
   - Service Deployment
