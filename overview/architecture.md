@@ -23,7 +23,7 @@ The way our frontend (Interface) communicates with our backend (System) is via a
 - CORS to ensure requests only originate from trusted domains
 - AWS WAF can be attached to block or monitor common web attacks
 
-## Serverless Compute
+## Serverless Compute for TeacherSeat Admin and Student Systems
 
 Requests are processed and responses are returned utilizing serverless compute via AWS Lambda. The learning platform is divided into Systems. Systems are Ruby on Rails applications that are namespaced either for the Admin or Student Panel and are scoped for a very specific domain. (eg. Payments)
 
@@ -74,3 +74,9 @@ AWS RDS Postgres is used initially with the TeacherSeat platform but can easily 
 Aurora Serverless V1 allows you to scale cost down to zero, meaning when there is no activity than there is no server running meaning there is zero cost. Aurora Serverless V1 warm up times are too slow especially paired with AWS Lambda. Aurora Serverles V1 has not proven to be cost-effective. Aurora Serverless could be configured for use but its not recommended.
 
 We are uncertain about Aurora Serverless V2, AWS has promised that the cold starts will be signfically reduced to V1, current known tests do indicate that is the case, that V2 does not scale down to zero cost, and its likely to be more expensive than V2. Opinion may change on V2 with time.
+
+## SDK Systems
+
+The Admin and Teacher Systems are only intended to be accessed by TeacherSeat Interfaces. For programmatic access via external API calls or by the TeacherSeat SDK, developers utilize the SDK Systems. The SDK systems are Ruby on Rails applications, but with API payloads structured for developers use.
+
+A Seperate AWS API Gateway hosted on the `api` subdomain to access the SDK systems.
