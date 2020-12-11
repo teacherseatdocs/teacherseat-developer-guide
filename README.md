@@ -8,7 +8,7 @@
   - TeacherSeat Integrations and Webhooks
 - How-Tos
   - Systems Development
-    - Introduction
+    - [Introduction](how-tos/systems-development/introduction.md)
     - Student System
     - Student Interface
     - Admin System
