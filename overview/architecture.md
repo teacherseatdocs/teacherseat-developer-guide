@@ -54,6 +54,16 @@ GraphQL provides great flexbility for the data payload, so you can get back "exa
 #### Why aren't you using a Database Per Service?
 Database Per Service is a micro-service pattern where each service has its own database. This means a service's data is "completely" independent from other services, schema chanages can be easily made with out affecting other services, can be deployed on its own schedule and can be scaled independently. Database per Service introduces signfincant operational and maintainance overhead, since some databases will rely on overlapping data, this relevent data must be replicated, must handle cross-database transactions and ensure data integrity. Using relational databases per service becomes costly very quickly so Database Per Service works  well when you have the budget or you adopt serverless databases like DynamoDB tables where its cost effective per table per service. Adopting serverless databases requires careful planning of schemas based on a history of past usage. Its possible in the future we'll adopt or have a migigration path for Database as a service for some or all sysytems.
 
-#### Why are using Postgres instead of X?
+#### Why are you using Postgres instead of X?
 - Postgres has robust features JSON and JSON functions to directly serve JSON from the database which we pass along back as a response.
 - With Postgres you can just add columns, without having to worry too much your table's columns limits
+
+#### What if I needs a better garuntee of avaliablity, durability, performance? 
+
+AWS RDS Postgres is used initially with the TeacherSeat platform but can easily be migrated over to AWS Aurora Postgres
+
+#### Why aren't you using Aurora Serverless?
+
+Aurora Serverless V1 allows you to scale cost down to zero, meaning when there is no activity than there is no server running meaning there is zero cost. Aurora Serverless V1 warm up times are too slow especially paired with AWS Lambda. Aurora Serverles V1 has not proven to be cost-effective. Aurora Serverless could be configured for use but its not recommended.
+
+We are uncertain about Aurora Serverless V2, AWS has promised that the cold starts will be signfically reduced to V1, current known tests do indicate that is the case, that V2 does not scale down to zero cost, and its likely to be more expensive than V2. Opinion may change on V2 with time.
