@@ -80,3 +80,10 @@ We are uncertain about Aurora Serverless V2, AWS has promised that the cold star
 The Admin and Teacher Systems are only intended to be accessed by TeacherSeat Interfaces. For programmatic access via external API calls or by the TeacherSeat SDK, developers utilize the SDK Systems. The SDK systems are Ruby on Rails applications, but with API payloads structured for developers use.
 
 A Seperate AWS API Gateway hosted on the `api` subdomain to access the SDK systems.
+
+### Queueing
+
+Background jobs are queued Ruby on Rails ActiveJob and AWS SQS. Jobs currently reside in their respected service. 
+
+> Currently there is duplication of job business logic between Admin Systems and SDK Systems. We may consider abstracting jobs out into isolate Lambda functions in the future for better reusability.
+
