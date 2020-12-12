@@ -11,7 +11,7 @@
     - [Introduction](how-tos/systems-development/introduction.md)
     - Student System
     - Student Interface
-    - Admin System
+    - [Admin System](how-tos/systems-development/admin-system.md)
     - Admin Interface
     - SDK System
   - Service Deployment
