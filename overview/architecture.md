@@ -36,7 +36,7 @@ Traditionally with serverless compute utilizing full web-frameworks like Ruby on
 
 ### Considerations
 
-#### Why aren't using Kubrenetes? 
+#### Why aren't you using Kubernetes? 
 At massive scale, utilizing a container-orchestration system such as Kubrenetes might make for better managment of services or better performance and could be a possible technical growth path. We believe utilizing serverless compute side-steps much of the operations and maintaince of a container-orchestration systems. For the very few unicorns who outgrow this architecture, you should at your scale have the money and talent to migrate your containers to your ideal architecture.
 
 #### Why are you using a web-framework?
