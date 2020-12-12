@@ -21,7 +21,7 @@ After generating out your project rename the the root folder to the following fo
 mv admin_iam admin.iam
 ```
 
-### 1.3 Create TeacherSeat System Config
+### 1.3 Create TeacherSeat System Configuration File
 
 In the root of your project you need to create a `teacherseat.json`
 
@@ -42,3 +42,16 @@ In the root of your project you need to create a `teacherseat.json`
 ```
 
 This file is used to register the system for you use in the Admin Systems Management.
+
+### 1.4 Configure Querylet
+
+Querylet is a gem we use to write raw queries.
+Open up your gemspec file eg. admin_iam.gemspec and add the following:
+
+```
+  spec.add_dependency "querylet"
+```
+
+
+
+##### 
