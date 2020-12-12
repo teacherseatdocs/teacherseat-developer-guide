@@ -52,4 +52,4 @@ Represents the API for programmatic access for external integrations
 
 ### System Plugins
 
-Represents smallar libaries of code to be used withint a Backend Student or Admin System.
+Represents smallar libaries of code to be used within a Backend Student or Admin System.
