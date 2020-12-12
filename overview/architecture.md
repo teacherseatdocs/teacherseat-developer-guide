@@ -81,9 +81,12 @@ The Admin and Teacher Systems are only intended to be accessed by TeacherSeat In
 
 A Seperate AWS API Gateway hosted on the `api` subdomain to access the SDK systems.
 
-### Queueing
+## Queueing Background Jobs
 
 Background jobs are queued Ruby on Rails ActiveJob and AWS SQS. Jobs currently reside in their respected service. 
 
 > Currently there is duplication of job business logic between Admin Systems and SDK Systems. We may consider abstracting jobs out into isolate Lambda functions in the future for better reusability.
 
+## Webhooks Integration
+
+Webhooks can be registered for various data (eg. send a webhook every time a new user signups) so you can notify third-party applications (eg. Micrsoft Teams)
