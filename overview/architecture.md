@@ -2,8 +2,6 @@
 
 ![](media/overview-architecture-cloud.png)
 
-TeacherSeat utilizes serverless compute and storage 
-
 ## CDN  
 
 When you access the learning platform (eg. `app.example.com`) traffic is pointed to CloudFront. CloudFront is a content distribution network (cdn) and it will cache common requests for assests (eg html, js, css and images) to various edge locations around the world. This ensures your website loads very in all avaliable regions. We can also apply a free SSL certficiate via Amazon Certification Manager (ACM) directly to CloudFront.
