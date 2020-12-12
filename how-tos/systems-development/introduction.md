@@ -3,7 +3,7 @@
 The flexbility of TeacherSeat to meet any use-case is due to its architecture around systems.
 Systems allow you to extend the functionality of your learning platform.
 
-## The boundaries of a System
+## The Boundaries of a System
 
 A system is made up of a collection of isolate programming libraries each with their own standards that could include:
 
@@ -12,6 +12,7 @@ A system is made up of a collection of isolate programming libraries each with t
 * SDK System
 * System Plugins
 
+![](media/how-tos-systems-development-introduction.png)
 
 ### Student Panel
 
