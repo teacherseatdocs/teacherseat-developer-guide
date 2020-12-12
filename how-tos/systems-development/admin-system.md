@@ -3,7 +3,7 @@
 
 ## 1. Setup
 
-## 1.1 Generate a Rails Engine
+### 1.1 Generate a Rails Engine
 Systems are [mountable Rails Engines](https://guides.rubyonrails.org/engines.html) configured to a specific standard.
 To create an Admin System you will prepend your engine name with admin namsepace `admin_<system>`
 
@@ -13,7 +13,7 @@ rails plugin new admin_iam --mountable
 
 > The reason we create a `mountable` engine instead of a `full` engine is because we want our engine to be completely isolate so if we include it in our coddebase it acts like an isolate service or can be deployed on its on.
 
-## 1.2 Rename your System
+### 1.2 Rename your System
 
 After generating out your project rename the the root folder to the following format `admin.<system>`
 
@@ -21,7 +21,7 @@ After generating out your project rename the the root folder to the following fo
 mv admin_iam admin.iam
 ```
 
-## 1.3 Create TeacherSeat System Config
+### 1.3 Create TeacherSeat System Config
 
 In the root of your project you need to create a `teacherseat.json`
 
