@@ -43,15 +43,57 @@ In the root of your project you need to create a `teacherseat.json`
 
 This file is used to register the system for you use in the Admin Systems Management.
 
-### 1.4 Configure Querylet
+### 1.4 Configure Querylet and Querylet Rails
 
-Querylet is a gem we use to write raw queries.
+- [Querylet](https://github.com/teacherseat/querylet) is a gem we use to write raw queries.
+- [Querylet Rails](https://github.com/teacherseat/querylet-rails) is a gem that has Rails Concerns files for our BaseController and ApplicationRecord
+
 Open up your gemspec file eg. admin_iam.gemspec and add the following:
 
+```rb
+  spec.add_dependency "querylet-rails"
 ```
-  spec.add_dependency "querylet"
+
+Create a queries directory under your System's app directory
+
+```
+mkdir app/queries
+touch app/queries/.keep
 ```
 
+Create an Api::BaseController and include QueryletRails::Controller::Queryable
+
+```
+mkdir app/controllers/api
+touch app/controllers/api/base_controller
+```
+
+```rb
+require 'querylet_rails/controller/queryable'
+require_dependency "admin_iam/application_controller"
+class AdminIam::Api::BaseController < ApplicationController
+  include QueryletRails::Controller::Queryable
+end
+```
+
+> Note that we have a `require_dependency`, this is to ensure our engine loads the correct application_controller from the engine and not from our parent app
+
+Modify your ApplicationRecord to include QueryletRails::Model::Queryable
+
+```rb
+require 'querylet_rails/model/queryable'
+module AdminIam
+  class ApplicationRecord < ActiveRecord::Base
+    self.abstract_class = true
+    include QueryletRails::Model::Queryable
+
+    def self.query_root
+      AdminIam::Engine.root
+    end
+  end
+end
+```
+
+> self.query_root is an class method we can override for querylet-rails to tell querylet-rails where are app/queries directory is located. This ensure it loads the queries directory in our engine and not from the parent's app/queries directory
 
 
-##### 
