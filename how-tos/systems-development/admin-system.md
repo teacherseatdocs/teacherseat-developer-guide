@@ -1,17 +1,38 @@
 # How to create a TeacherSeat Admin System
 
+## 0. Namining
+
+We need to probably scope our systems naming, we also have to take account realworld limits:
+
+`<provider>_<namespace>_<system>_<subsystem>`
+
+| Rule | Length |
+|---|---|
+| Ruby Gems Name| 64 character name, can't contain hyphens in folder names |
+| Github Repos Name | 64 characters |
+| NPM Package Name | 124 characters |
+| Postgres Table Name | |63 character | 
+| DynamoDB Table Name | |255 character | 
+| S3 Bucket Name | |255 character, can't contain underscores | 
+
+Take for example the subsystem which would result in 45 characters:
+
+```
+admin_teacherseat_team_insights_organizations
+```
 
 ## 1. Setup
 
 ### 1.1 Generate a Rails Engine
 Systems are [mountable Rails Engines](https://guides.rubyonrails.org/engines.html) configured to a specific standard.
-To create an Admin System you will prepend your engine name with admin namsepace `<namespace>_admin_<system>`
+To create an Admin System you will prepend your engine name with admin namsepace `<provider>_admin_<system>`
 
 ```
 rails plugin new teacherset_admin_iam --mountable
 ```
 
-> Gem names and Github repos have a limit of 64 character names. You might have to get creative with your namespace and system name.
+
+
 
 > The reason we create a `mountable` engine instead of a `full` engine is because we want our engine to be completely isolate so if we include it in our coddebase it acts like an isolate service or can be deployed on its on.
 
