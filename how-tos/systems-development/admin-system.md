@@ -5,21 +5,15 @@
 
 ### 1.1 Generate a Rails Engine
 Systems are [mountable Rails Engines](https://guides.rubyonrails.org/engines.html) configured to a specific standard.
-To create an Admin System you will prepend your engine name with admin namsepace `admin_<system>`
+To create an Admin System you will prepend your engine name with admin namsepace `<namespace>_admin_<system>`
 
 ```
-rails plugin new admin_iam --mountable
+rails plugin new teacherset_admin_iam --mountable
 ```
+
+> Gem names and Github repos have a limit of 64 character names. You might have to get creative with your namespace and system name.
 
 > The reason we create a `mountable` engine instead of a `full` engine is because we want our engine to be completely isolate so if we include it in our coddebase it acts like an isolate service or can be deployed on its on.
-
-### 1.2 Rename your System
-
-After generating out your project rename the the root folder to the following format `admin.<system>`
-
-```
-mv admin_iam admin.iam
-```
 
 ### 1.3 Create TeacherSeat System Configuration File
 
@@ -83,7 +77,7 @@ Modify your ApplicationRecord to include QueryletRails::Model::Queryable
 
 ```rb
 require 'querylet_rails/model/queryable'
-module AdminIam
+module TeacherseatAdminIam
   class ApplicationRecord < ActiveRecord::Base
     self.abstract_class = true
     include QueryletRails::Model::Queryable
@@ -127,7 +121,7 @@ require 'querylet_rails/controller/queryable'
 require 'teacherseat_permissions/controller/permissible'
 require_dependency "admin_iam/application_controller"
 
-class AdminIam::Api::BaseController < ApplicationController
+class TeacherseatAdminIam::Api::BaseController < ApplicationController
   include QueryletRails::Controller::Queryable
   include Teacherseat::Controller::Permissible
 end
