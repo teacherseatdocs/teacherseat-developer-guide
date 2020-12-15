@@ -18,7 +18,7 @@ We need to probably scope our systems naming, we also have to take account realw
 Take for example the subsystem which would result in 45 characters:
 
 ```
-admin_teacherseat_team_insights_organizations
+teacherseat_admin_team_insights_organizations
 ```
 
 ## 1. Setup
