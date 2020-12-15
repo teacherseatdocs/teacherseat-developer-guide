@@ -37,7 +37,8 @@ In the root of your project you need to create a `teacherseat.json`
       "type": "alpha",
       "version": 0
     }
-  }
+  },
+
 }
 ```
 
@@ -96,4 +97,39 @@ end
 
 > self.query_root is an class method we can override for querylet-rails to tell querylet-rails where are app/queries directory is located. This ensure it loads the queries directory in our engine and not from the parent's app/queries directory
 
+## Install and Configure TeacherseatPermissions
+
+Every Admin System had to handle permissions. Update your `teacherseat.json` to have a section for permissions
+
+```json
+{
+  "name": "TeacherSeat.Admin.IAM",
+  "description": "Indentity and Access Management System",
+  "version" : {
+    "major": 1,
+    "minor": 0,
+    "tiny":  0,
+    "release" : {
+      "type": "alpha",
+      "version": 0
+    }
+  },
+  permissions: [
+    {name: 'TeacherSeat::Admin::IAM::Policies::Create', "Be able to create a new policy" }
+  ]
+}
+```
+
+Modify your Api::BaseController and include Teacherseat::Controller::Permissible
+
+```rb
+require 'querylet_rails/controller/queryable'
+require 'teacherseat_permissions/controller/permissible'
+require_dependency "admin_iam/application_controller"
+
+class AdminIam::Api::BaseController < ApplicationController
+  include QueryletRails::Controller::Queryable
+  include Teacherseat::Controller::Permissible
+end
+```
 
