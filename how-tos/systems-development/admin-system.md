@@ -2,9 +2,15 @@
 
 ## 0. Namining
 
-We need to probably scope our systems naming, we also have to take account realworld limits:
+A System / subsystem need to follow the naming schema to avoid conflicts with other future systems: 
 
-`<provider>_<namespace>_<system>_<subsystem>`
+```
+<provider>_<namespace>_<system>_<subsystem>
+```
+
+We also have to take account realworld limits when naminig our system:
+
+
 
 | Rule | Length |
 |---|---|
@@ -19,6 +25,12 @@ Take for example the subsystem which would result in 45 characters:
 
 ```
 teacherseat_admin_team_insights_organizations
+```
+
+So we can instead name it:
+
+```
+ts_admin_tmi_organizations
 ```
 
 ## 1. Setup
