@@ -114,8 +114,8 @@ Every Admin System had to handle permissions. Update your `teacherseat.json` to 
       "version": 0
     }
   },
-  permissions: [
-    {name: 'TeacherSeat::Admin::IAM::Policies::Create', "Be able to create a new policy" }
+  "permissions": [
+    {"name": "TeacherSeat::Admin::IAM::Policies::Create", "Be able to create a new policy" }
   ]
 }
 ```
