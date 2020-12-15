@@ -11,9 +11,9 @@ We need to probably scope our systems naming, we also have to take account realw
 | Ruby Gems Name| 64 character name, can't contain hyphens in folder names |
 | Github Repos Name | 64 characters |
 | NPM Package Name | 124 characters |
-| Postgres Table Name | |63 character | 
-| DynamoDB Table Name | |255 character | 
-| S3 Bucket Name | |255 character, can't contain underscores | 
+| Postgres Table Name | 63 character | 
+| DynamoDB Table Name | 255 character | 
+| S3 Bucket Name | 255 character, can't contain underscores | 
 
 Take for example the subsystem which would result in 45 characters:
 
