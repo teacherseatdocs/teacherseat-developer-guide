@@ -153,7 +153,7 @@ require_dependency "admin_iam/application_controller"
 
 class TeacherseatAdminIam::Api::BaseController < ApplicationController
   include QueryletRails::Controller::Queryable
-  include Teacherseat::Controller::Permissible
+  include TeacherseatPermissions::Controller::Permissible
 end
 ```
 
