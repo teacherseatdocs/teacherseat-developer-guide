@@ -40,11 +40,8 @@ Systems are [mountable Rails Engines](https://guides.rubyonrails.org/engines.htm
 To create an Admin System you will prepend your engine name with admin namsepace `<provider>_admin_<system>`
 
 ```
-rails plugin new teacherset_admin_iam --mountable
+rails plugin new ts_admin_iam --mountable
 ```
-
-
-
 
 > The reason we create a `mountable` engine instead of a `full` engine is because we want our engine to be completely isolate so if we include it in our coddebase it acts like an isolate service or can be deployed on its on.
 
