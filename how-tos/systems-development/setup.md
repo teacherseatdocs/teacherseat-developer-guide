@@ -65,4 +65,9 @@ gem 'ts_admin_sys'  , path: '/Users/andrewbrown/Sites/teacherseat/ts_backend/adm
 bundle install
 ```
 
+You can now change code within these engines and they should reflect in real time in the running development app.
+In some cases you need to stop and restart your Rails app since Rails does not dynamically reload all classes and modules eg. RAILS_ROOT/lib
+
 ## Configuring Frontend for Development
+
+
