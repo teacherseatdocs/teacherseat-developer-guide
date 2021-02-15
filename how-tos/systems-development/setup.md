@@ -3,7 +3,7 @@
 This setup guide is to help you understand how to work with a multi-engine service in your development enviroment.
 
 
-## Setup TeacherSeat Directories
+## Setup TeacherSeat Directories and Pull Repositories 
 
 The web-application is composed of multiple frontend and backends
 
@@ -33,11 +33,28 @@ A Rails application will need the followin Core engines installed:
 We'll need to clone the repos:
 
 ```
-cd ~/Sites/teacherseat/ts_frontend
+cd ~/Sites/teacherseat/ts_backend
 git clone https://github.com/teacherseat/ts_admin_dsh
 git clone https://github.com/teacherseat/ts_admin_iam
 git clone https://github.com/teacherseat/ts_admin_sys
 ```
+
+Most admin engines will have a corresponding frontend taht is an isolate javascript application:
+
+- `ts_ui_admin_dsh`
+- `ts_ui_admin_iam`
+- `ts_ui_admin_sys`
+
+We'll need to clone the repos:
+
+```
+cd ~/Sites/teacherseat/ts_frontend
+git clone https://github.com/teacherseat/ts_ui_admin_dsh
+git clone https://github.com/teacherseat/ts_ui_admin_iam
+git clone https://github.com/teacherseat/ts_ui_admin_sys
+```
+
+## Configuring Backend for Development
 
 In your Gemfile you can then reference them via path for local development:
 
@@ -47,3 +64,5 @@ gem 'ts_admin_iam'  , path: '/Users/andrewbrown/Sites/teacherseat/ts_backend/adm
 gem 'ts_admin_sys'  , path: '/Users/andrewbrown/Sites/teacherseat/ts_backend/admin/ts_admin_sys'
 bundle install
 ```
+
+## Configuring Frontend for Development
