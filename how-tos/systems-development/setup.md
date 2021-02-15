@@ -39,11 +39,11 @@ git clone https://github.com/teacherseat/ts_admin_iam
 git clone https://github.com/teacherseat/ts_admin_sys
 ```
 
-Most admin engines will have a corresponding frontend taht is an isolate javascript application:
+Most admin engines will have a corresponding frontend that is an isolate javascript application:
 
-- `ts_ui_admin_dsh`
-- `ts_ui_admin_iam`
-- `ts_ui_admin_sys`
+- `ts_admin_dsh` -> `ts_ui_admin_dsh`
+- `ts_admin_iam` -> `ts_ui_admin_iam`
+- `ts_admin_sys` -> `ts_ui_admin_sys`
 
 We'll need to clone the repos:
 
