@@ -12,16 +12,20 @@ Create the following directory structure:
 ```
 ~/Sites/
 ├── teacherseat
-    └── ts_frontend/
+    ├── ts_frontend/
+    |   ├── admin/ 
+    |   └── student/
     └── ts_backend/
+        ├── admin/ 
+        └── student/ 
 ```
 
 Run the following commands. 
 ```
-mkdir ~/Sites
-mkdir ~/Sites/teacherseat
-mkdir ~/Sites/teacherseat/ts_frontend
-mkdir ~/Sites/teacherseat/ts_backend
+mkdir -p ~/Sites/teacherseat/ts_frontend/admin
+mkdir -p ~/Sites/teacherseat/ts_frontend/student
+mkdir -p ~/Sites/teacherseat/ts_backend/admin
+mkdir -p ~/Sites/teacherseat/ts_backend/student
 ```
 
 A Rails application will need the followin Core engines installed:
