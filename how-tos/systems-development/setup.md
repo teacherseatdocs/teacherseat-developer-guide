@@ -28,7 +28,7 @@ mkdir -p ~/Sites/teacherseat/ts_backend/admin
 mkdir -p ~/Sites/teacherseat/ts_backend/student
 ```
 
-A Rails application will need the followin Core engines installed:
+A Rails application will need the following Core engines installed:
 
 - `ts_admin_dsh` - Dashboard Service (the homepage dashboard admin's first see when they login)
 - `ts_admin_iam` — Identity and Access Management (how we manage users and permissions)
@@ -37,7 +37,7 @@ A Rails application will need the followin Core engines installed:
 We'll need to clone the repos:
 
 ```
-cd ~/Sites/teacherseat/ts_backend
+cd ~/Sites/teacherseat/ts_backend/admin
 git clone https://github.com/teacherseat/ts_admin_dsh
 git clone https://github.com/teacherseat/ts_admin_iam
 git clone https://github.com/teacherseat/ts_admin_sys
@@ -52,11 +52,13 @@ Most admin engines will have a corresponding frontend that is an isolate javascr
 We'll need to clone the repos:
 
 ```
-cd ~/Sites/teacherseat/ts_frontend
+cd ~/Sites/teacherseat/ts_frontend/admin
 git clone https://github.com/teacherseat/ts_ui_admin_dsh
 git clone https://github.com/teacherseat/ts_ui_admin_iam
 git clone https://github.com/teacherseat/ts_ui_admin_sys
 ```
+
+> The example is only show the Admin Systems, its the same process for Student Systems.
 
 ## Configuring Backend for Development
 
@@ -74,4 +76,73 @@ In some cases you need to stop and restart your Rails app since Rails does not d
 
 ## Configuring Frontend for Development
 
+All the frontend code is compiled directly into the the RAILS_ROOT/public/{javascripts,stylesheets}`
 
+### Building individual frontends
+
+### Recursively building frontends 
+
+Using the node package `concurrently` we can build all our desired frontends in a single command.
+
+Add a package.json in the `ts_frontend`
+
+```
+touch ~/Sites/teacherseat/ts_frontend
+```
+
+Add the following contents
+
+```json
+{
+  "name": "teacherseat-recursive",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch-exp-admin-iam"  : "cd admin/ts_ui_admin_iam && TS_PROFILE=exp npm run watch",
+    "watch-exp-admin-pay"  : "cd admin/ts_ui_admin_pay && TS_PROFILE=exp npm run watch",
+    "watch-exp-admin-sys"  : "cd admin/ts_ui_admin_sys && TS_PROFILE=exp npm run watch",
+    "watch-exp-admin-dsh"  : "cd admin/ts_ui_admin_dsh && TS_PROFILE=exp npm run watch",
+    "watch-exp-student_pay": "cd student/ts_ui_student_pay && TS_PROFILE=exp npm run watch",
+    "watch-exp-student_tmi": "cd student/ts_ui_student_tmi && TS_PROFILE=exp npm run watch",
+    "watch-exp": "concurrently npm:watch-exp-*",
+
+    "watch-wcd-admin-iam"  : "cd admin/ts_ui_admin_iam && TS_PROFILE=wcd npm run watch",
+    "watch-wcd-admin-sys"  : "cd admin/ts_ui_admin_sys && TS_PROFILE=wcd npm run watch",
+    "watch-wcd-admin-dsh"  : "cd admin/ts_ui_admin_dsh && TS_PROFILE=wcd npm run watch",
+    "watch-wcd": "concurrently npm:watch-wcd-*",
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
+}
+```
+
+And then install the dependenices 
+
+```
+cd ~/Sites/ts_frontend
+npm install
+```
+
+Then you can build for your project. For ExamPro it would be:
+
+```
+npm run watch-exp
+```
