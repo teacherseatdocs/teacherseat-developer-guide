@@ -177,3 +177,256 @@ MOUNT_PATH='/example_spot'
 
 </p>
 </details>
+
+<details>
+<summary>webpack.dev.js & webpack.prod.js</summary>
+<p>
+
+
+<details>
+<summary>webpack.dev.js</summary>
+  
+```js
+const path = require('path')
+const webpack = require('webpack')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+let env_filename = ''
+console.log('TS_PROFILE')
+console.log(process.env.TS_PROFILE)
+if (process.env.TS_PROFILE) {
+  env_filename = `development.${process.env.TS_PROFILE}.env`
+} else {
+  env_filename = 'development.env'
+}
+const dotenv = require('dotenv').config({path: path.resolve(__dirname, env_filename) })
+
+const coffee = {
+  test: /\.coffee$/, loader: 'coffee-loader'
+}
+
+const minicss = {
+  test: /\.s[ac]ss$/i,
+  use: [
+    MiniCssExtractPlugin.loader,
+    {
+      loader: 'css-loader',
+      options: {
+        sourceMap: true,
+      }
+    },
+    {
+      loader: 'sass-loader',
+      options: {
+        sourceMap: true,
+        sassOptions: {
+          includePaths: [
+            path.resolve(__dirname, 'stylesheets'),
+            path.resolve(__dirname, 'node_modules','ts_ui_admin','stylesheets')
+          ]
+        } // sassOptions
+      } // options
+    }
+  ]
+}
+
+const file = {
+  test: /\.(svg|png|jpe?g|gif)$/i,
+  loader: 'file-loader',
+  options: {
+      name: '/[path][name].[ext]',
+  },
+}
+
+module.exports = {
+  mode: 'development',
+  target: 'web',
+  devtool: 'source-map',
+  entry: {
+    'stylesheets/ts_ui_admin_iam' : path.resolve(__dirname, 'stylesheets/style.sass'),
+    'javascripts/ts_ui_admin_iam.js' : path.resolve(__dirname, 'javascripts/app.coffee')
+  },
+  output: {
+    path    : process.env.OUTPUT_PATH,
+    filename: '[name]'
+  },
+  resolve: {
+    extensions: ['.coffee','.js','.json', 'scss'],
+    modules: ['node_modules/'],
+    alias: {
+      components : path.resolve(__dirname, 'javascripts/components/'),
+      models     : path.resolve(__dirname, 'javascripts/models/'),
+      views      : path.resolve(__dirname, 'javascripts/views/'),
+      services   : path.resolve(__dirname, 'javascripts/services/'),
+      lib        : path.resolve(__dirname, 'javascripts/lib/'),
+      'shared/components' : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/components/'),
+      'shared/services'   : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/services/'),
+      'shared/views'      : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/views/')
+    }
+  },
+  plugins: [
+    new MiniCssExtractPlugin({ filename: '[name].css'}),
+    new webpack.DefinePlugin({
+      "process.env": JSON.stringify(dotenv.parsed)
+    })
+  ],
+  node: { __dirname: false },
+  module: { rules: [coffee, minicss, file] }
+}
+
+```
+</details>
+
+<details>
+<summary>webpack.prod.js</summary>
+  
+```js
+const path = require('path')
+const webpack = require('webpack')
+const TerserPlugin = require('terser-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const dotenv = require('dotenv').config({path: path.resolve(__dirname, 'production.env') })
+
+const coffee = {
+  test: /\.coffee$/, loader: 'coffee-loader'
+}
+
+const minicss = {
+  test: /\.s[ac]ss$/i,
+  use: [
+    MiniCssExtractPlugin.loader,
+    'css-loader',
+    {
+      loader: 'sass-loader',
+      options: {
+        sassOptions: {
+          includePaths: [
+            path.resolve(__dirname, 'stylesheets'),
+            path.resolve(__dirname, 'node_modules','ts_ui_admin','stylesheets')
+          ]
+        } // sassOptions
+      } // options
+    }
+  ]
+}
+
+const file = {
+  test: /\.(svg|png|jpe?g|gif)$/i,
+  loader: 'file-loader',
+  options: {
+      name: '/[path][name].[ext]',
+  },
+}
+
+const minifier = new TerserPlugin({
+  terserOptions: {
+    mangle: true,
+    toplevel: true,
+    keep_fnames: false,
+    keep_classnames: true
+  }
+})
+
+module.exports = {
+  mode: 'production',
+  target: 'web',
+  entry: {
+    'stylesheets/ts_ui_admin_iam' : path.resolve(__dirname, 'stylesheets/style.sass'),
+    'javascripts/ts_ui_admin_iam' : path.resolve(__dirname, 'javascripts/app.coffee')
+  },
+  output: {
+    path    : process.env.OUTPUT_PATH,
+    filename: '[name].js'
+  },
+  resolve: {
+    extensions: ['.coffee','.js','.json', 'scss'],
+    modules: ['node_modules/'],
+    alias: {
+      components : path.resolve(__dirname, 'javascripts/components/'),
+      models     : path.resolve(__dirname, 'javascripts/models/'),
+      views      : path.resolve(__dirname, 'javascripts/views/'),
+      services   : path.resolve(__dirname, 'javascripts/services/'),
+      lib        : path.resolve(__dirname, 'javascripts/lib/'),
+      'shared/components' : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/components/'),
+      'shared/services'   : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/services/'),
+      'shared/views'      : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/views/')
+    }
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].css'
+    }),
+    new webpack.DefinePlugin({
+      "process.env": JSON.stringify(dotenv.parsed)
+    })
+  ],
+  optimization: {
+    minimizer: [minifier],
+  },
+  node: { __dirname: false },
+  module: { rules: [coffee, minicss, file] }
+}
+```
+</details>
+<p>
+1. Differences
+
+These are only few differences between these two files.
+
+In the ```webpack.prod.js``` a compressor is used to minify the files.
+
+```js
+const minifier = new TerserPlugin({
+  terserOptions: {
+    mangle: true,
+    toplevel: true,
+    keep_fnames: false,
+    keep_classnames: true
+  }
+})
+```
+
+In the ```webpack.dev.js```, we manually load the ```development.env``` file based on the ```TS_PROFILE``` environment variable that is passed.
+```js
+let env_filename = ''
+console.log('TS_PROFILE')
+console.log(process.env.TS_PROFILE)
+if (process.env.TS_PROFILE) {
+  env_filename = `development.${process.env.TS_PROFILE}.env`
+} else {
+  env_filename = 'development.env'
+}
+```
+
+However, for production, only the ```production.env``` file is loaded which is automatically created in the ```buildspec.yaml``` file. 
+</p>
+<p>
+2. Shared files
+
+There is a default library that is shared among all ```teacherseat``` interfaces with base UI components.
+```js
+'shared/components' : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/components/'),
+'shared/services'   : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/services/'),
+'shared/views'      : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/views/')
+```
+
+These come from the ```ts_ui_admin``` interface. More components will be added soon.
+</p>
+
+<p>
+3. Changes
+
+Few changes needs to be made when copying these files over for your admin interface.
+
+In both the ```webpack.dev.js``` and ```webpack.prod.js```, the interface's name needs to be chaged.
+
+In the ```module.exports``` function : 
+
+```js
+'stylesheets/<provider>_ui_<namespace>_<system>_<subsystem>' : path.resolve(__dirname, 'stylesheets/style.sass'),
+'javascripts/<provider>_ui_<namespace>_<system>_<subsystem>' : path.resolve(__dirname, 'javascripts/app.coffee')
+```
+</p>
+</p>
+</details>
+
