@@ -1,4 +1,4 @@
-# How to create a TeacherSeat Admin System
+# How to create a TeacherSeat Admin Interface
 
 ## 0. Naming
 
