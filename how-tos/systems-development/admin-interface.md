@@ -116,7 +116,7 @@ Tip: It's easier to copy the files from an already existing interface since most
 The version is important because it determine what will get compiled when the interface is used by CodeBuild. It's necessary to keep this upto date for everything to work properly.
 </details>
 
-<details open>
+<details>
 <summary>buildspec.yaml</summary>
 
 
