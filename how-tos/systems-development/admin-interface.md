@@ -1,31 +1,44 @@
 # How to create a TeacherSeat Admin Interface
 
+<h1 id='table-of-contents'>TABLE OF CONTENTS</h1>
+
+- [How to create a TeacherSeat Admin Interface](#how-to-create-a-teacherseat-admin-interface)
+  - [0. Naming](#0-naming)
+    - [System and Interface](#system-and-interface)
+    - [Real-world Limits](#real-world-limits)
+  - [1. Directory structure](#1-directory-structure)
+    - [Package.json](#packagejson)
+    - [Buildspec.json](#buildspecjson)
+    - [Development.env](#developmentenv)
+    - [Webpack.dev.js & Webpack.prod.js](#webpackdevjs--webpackprodjs)
+  
 ## 0. Naming
 
-
+### System and Interface
 An interface / sub-interface needs to follow the naming schema to avoid conflicts with other future interfaces: 
 
 ```
-<provider>_ui_<namespace>_<system>_<subsystem>
+<provider>_ui_<namespace>_<interface>_<sub-interface>
 ```
 
 Each backend will have a corresponding frontend. The backend and frontend names needs to match.
 
 A frontend interface with the name:
 ```
-<provider>_ui_<namespace>_<system>_<subsystem>
+<provider>_ui_<namespace>_<interface>_<sub-interface>
 ```
 
 Would correspond to a system with the name:
 ```
-<provider>_<namespace>_<system>_<subsystem>
+<provider>_<namespace>_<interface>_<sub-interface>
 ```
 
-and vice-versa. Note that the only difference is the word ```ui``` in the frontend.
+and vice-versa. 
 
+Note that the only difference is the word `ui` in the frontend.
 
-We also have to take into account real-world limits when naming our system:
-
+### Real-world Limits
+We also have to take into account real-world limits when naming our interface:
 
 
 | Rule | Length |
@@ -37,7 +50,8 @@ We also have to take into account real-world limits when naming our system:
 | DynamoDB Table Name | 255 character | 
 | S3 Bucket Name | 255 character, can't contain underscores | 
 
-Take for example the subsystem which would result in 45 characters:
+
+Take for example the sub-interface which would result in 45 characters:
 
 ```
 teacherseat_ui_admin_team_insights_organizations
@@ -49,10 +63,122 @@ So we can instead name it:
 ts_ui_admin_tmi_organizations
 ```
 
-## 1. Setup
+## 1. Directory structure
 
-Tip: It's easier to copy the files from an already existing interface since most of the setup is very similar.
+> Tip: It's easier to copy the files from an already existing interface since most of the setup is very similar.
 
+```
+~/<provider>_ui_<namespace>_<interface>_<sub-interface>/
+  ├── images/
+  ├── javascripts/
+  |   ├── components/
+  |   ├── lib/
+  |   ├── models/ 
+  |   ├── services/ 
+  |   ├── views/
+  |   |   └── <sub-interface>/
+  |   |       └── index.coffee  
+  |   └── app.coffee
+  └── stylesheets/   
+  |   ├── lib/
+  |   ├── <sub-interface>/
+  |   |   └── index.sass
+  |   └── style.sass
+  ├── buildspec.yaml
+  ├── development.env
+  ├── package.json
+  ├── webpack.dev.js
+  └── webpack.prod.js
+```
+### Package.json
+
+Initialize a new npm package
+
+```Bash
+  npm init
+  package name: "<provider>-ui-<namespace>-<system>-<subsystem>"
+  version: "1.0.0" (default)
+  description: ""
+  entry point: "index.js" (default)
+  git repository: ""
+  keywords: ""
+  author: ""
+  license: "ISC" (default)
+```
+
+
+1. Edit name to your interface's name, for example ```ts_ui_admin_sys_organizations```
+
+```
+  "name": "<provider>_ui_<namespace>_<system>_<subsystem>",
+ ```
+> **ATTENTION** the `package name` is `-` (dash) separated, not `_` (underscore).
+
+2. Edit version, for example ```1.2.3```
+
+```
+  "version": "major.minor.patch",
+ ```
+ 
+The version is important because it determine what will get compiled when the interface is used by CodeBuild. It's necessary to keep this upto date for everything to work properly.
+
+
+After we generate our default `package.json`, we need to add **build** and **watch** scripts
+
+```JSON
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production     --config webpack.prod.js",
+    "watch": "webpack --mode development -w --config webpack.dev.js"
+  },
+```
+
+- `build` creates the production version
+- `watch` creates the development version
+
+
+**Dependencies**
+
+```Bash
+  npm i clipboard
+  npm i dilithium-js@1.1.2
+  npm i dotenv
+  npm i mini-css-extract-plugin
+  npm i rollbar
+```
+
+> **ATTENTION** `dilithium-js` has to be the latest version.
+
+**Dev Dependencies**
+
+```Bash
+  npm i -D actioncable
+  npm i -D coffee-loader
+  npm i -D coffeescript
+  npm i -D css-loader
+  npm i -D file-loader
+  npm i -D filemanager-webpack-plugin
+  npm i -D http-server
+  npm i -D inflection
+  npm i -D luxon
+  npm i -D node-sass
+  npm i -D sass-loader
+  npm i -D terser
+  npm i -D terser-webpack-plugin
+  npm i -D uuid
+  npm i -D webpack
+  npm i -D webpack-cli@~3.3.3
+
+  ts_ui_admin*
+```
+
+> **ATTENTION** `ts_ui_admin` has to be added manually.
+
+```JSON
+"ts_ui_admin": "git+ssh://git@github.com:teacherseat/ts_ui_admin.git#semver:1.3.0"
+```
+
+**Final `package.json` Structure**
 
 <details>
 <summary>package.json</summary>
@@ -100,28 +226,17 @@ Tip: It's easier to copy the files from an already existing interface since most
 }
 ```
 </p>
-
-1. Edit name to your interface's name, for example ```ts_ui_admin_sys```
-
-```
-  "name": "<provider>_ui_<namespace>_<system>_<subsystem>",
- ```
- 
-2. Edit version, for example ```1.2.3```
-
-```
-  "version": "major.minor.patch",
- ```
- 
-The version is important because it determine what will get compiled when the interface is used by CodeBuild. It's necessary to keep this upto date for everything to work properly.
 </details>
 
-<details>
-<summary>buildspec.yaml</summary>
+---
 
+
+### Buildspec.json
 
 This file is used by CodeBuild to build out the final code. 
 
+<details>
+<summary>buildspec.yaml</summary>
 <p>
 
 ```yaml
@@ -160,8 +275,9 @@ phases:
 </p>
 </details>
 
-<details>
-<summary>development.env</summary>
+---
+
+### Development.env
 
 
 ```
@@ -173,14 +289,10 @@ MOUNT_PATH='/example_spot'
 ```MOUNT_PATH``` is where the admin panel should be placed. 
 
 *See the ```webpack.dev.js``` section for how this file is loaded.* 
-<p>
 
-</p>
-</details>
+---
 
-<details>
-<summary>webpack.dev.js & webpack.prod.js</summary>
-<p>
+### Webpack.dev.js & Webpack.prod.js
 
 
 <details>
@@ -368,8 +480,6 @@ module.exports = {
 }
 ```
 </details>
-<p>
-1. Differences
 
 These are only few differences between these two files.
 
@@ -399,9 +509,6 @@ if (process.env.TS_PROFILE) {
 ```
 
 However, for production, only the ```production.env``` file is loaded which is automatically created in the ```buildspec.yaml``` file. 
-</p>
-<p>
-2. Shared files
 
 There is a default library that is shared among all ```teacherseat``` interfaces with base UI components.
 ```js
@@ -411,22 +518,18 @@ There is a default library that is shared among all ```teacherseat``` interfaces
 ```
 
 These come from the ```ts_ui_admin``` interface. More components will be added soon.
-</p>
-
-<p>
-3. Changes
 
 Few changes needs to be made when copying these files over for your admin interface.
 
 In both the ```webpack.dev.js``` and ```webpack.prod.js```, the interface's name needs to be chaged.
 
-In the ```module.exports``` function : 
+In the ```module.exports``` function: 
 
 ```js
-'stylesheets/<provider>_ui_<namespace>_<system>_<subsystem>' : path.resolve(__dirname, 'stylesheets/style.sass'),
-'javascripts/<provider>_ui_<namespace>_<system>_<subsystem>' : path.resolve(__dirname, 'javascripts/app.coffee')
+'stylesheets/<provider>_ui_<namespace>_<interface>_<sub-interface>' : path.resolve(__dirname, 'stylesheets/style.sass'),
+'javascripts/<provider>_ui_<namespace>_<interface>_<sub-interface>' : path.resolve(__dirname, 'javascripts/app.coffee')
 ```
-</p>
-</p>
-</details>
 
+TO DO: 
+
+EXPLAIN FOLDER FILES IN DETAIL
