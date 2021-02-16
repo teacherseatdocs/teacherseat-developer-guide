@@ -81,11 +81,10 @@ All the frontend code is compiled directly into the the RAILS_ROOT/public/{javas
 ### Building individual frontends
 
 Each frontend locally requiries `development.env` to be configured within the project.
-You need to configure two values: OUTPUT_PATH and MOUNT_PATH
+You need to configure two values: OUTPUT_PATH
 
 ```
 OUTPUT_PATH=/Users/andrewbrown/Sites/exampro-projects/exampro/public
-MOUNT_PATH='/admin'
 ```
 
 When working with multiple projects you can pass `TS_PROFILE` enviroment variable to specific a different configuration file eg.
