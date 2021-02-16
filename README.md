@@ -10,6 +10,7 @@
   - Systems Development
     - [Introduction](how-tos/systems-development/introduction.md)
     - [Setup](how-tos/systems-development/setup.md)
+    - [MonoRepo Frontend Initializers](how-tos/systems-development/monorepo-frontend-initializers.md)
     - Student System
     - Student Interface
     - [Admin System](how-tos/systems-development/admin-system.md)
