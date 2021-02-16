@@ -159,3 +159,21 @@ phases:
 ```
 </p>
 </details>
+
+<details>
+<summary>development.env</summary>
+
+
+```
+OUTPUT_PATH=/path/to/public
+MOUNT_PATH='/example_spot'
+```
+```OUTPUT_PATH``` is the path to the public folder where the output files should be placed.
+
+```MOUNT_PATH``` is where the admin panel should be placed. 
+
+*See the ```webpack.dev.js``` section for how this file is loaded.* 
+<p>
+
+</p>
+</details>
