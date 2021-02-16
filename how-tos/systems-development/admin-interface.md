@@ -113,5 +113,49 @@ Tip: It's easier to copy the files from an already existing interface since most
   "version": "major.minor.patch",
  ```
  
- THe version is important because it determine what will get compiled when the interface is used by CodeBuild. It's necessary to keep this upto date for everything to work properly.
+The version is important because it determine what will get compiled when the interface is used by CodeBuild. It's necessary to keep this upto date for everything to work properly.
+</details>
+
+<details open>
+<summary>buildspec.yaml</summary>
+
+
+This file is used by CodeBuild to build out the final code. 
+
+<p>
+
+```yaml
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 12
+  build:
+    commands:
+      ## ---- We need the ID RSA so we can npm install ts_ui_admin
+      - "[[ -d ~/.ssh ]] || mkdir ~/.ssh"
+      - aws ssm get-parameter --name /teacherseat/service-assets/ID_RSA --with-decryption --query Parameter.Value --output text | tee ~/.ssh/id_rsa >/dev/null
+      - chmod 400 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - "ssh-keygen -F github.com || ssh-keyscan github.com >>~/.ssh/known_hosts"
+      ## ----- Install Packages
+      # https://docs.npmjs.com/cli/v6/commands/npm-ci
+      - cd $CODEBUILD_SRC_DIR
+      - npm ci
+      ## ----- Build
+      - cd $CODEBUILD_SRC_DIR
+      - echo "OUTPUT_PATH=$CODEBUILD_SRC_DIR" | tee production.env
+      - npm run build
+      - "VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | xargs)"
+      - echo "$BUCKET"
+      - echo "$NAMESPACE"
+      - echo "$VERSION"
+  post_build:
+    commands:
+      - aws s3 cp "$CODEBUILD_SRC_DIR/javascripts/$NAMESPACE.js"  "s3://$BUCKET/$NAMESPACE/$VERSION/$NAMESPACE.$VERSION.js"
+      - aws s3 cp "$CODEBUILD_SRC_DIR/stylesheets/$NAMESPACE.css" "s3://$BUCKET/$NAMESPACE/$VERSION/$NAMESPACE.$VERSION.css"
+
+```
+</p>
 </details>
