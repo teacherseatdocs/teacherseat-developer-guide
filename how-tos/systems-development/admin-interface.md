@@ -235,6 +235,8 @@ After we generate our default `package.json`, we need to add **build** and **wat
 
 This file is used by CodeBuild to build out the final code. 
 
+**Final `buildspec.yaml` Structure**
+
 <details>
 <summary>buildspec.yaml</summary>
 <p>
@@ -294,6 +296,8 @@ MOUNT_PATH='/example_spot'
 
 ### Webpack.dev.js & Webpack.prod.js
 
+
+**Final `webpack.dev.js` Structure**
 
 <details>
 <summary>webpack.dev.js</summary>
@@ -388,6 +392,8 @@ module.exports = {
 
 ```
 </details>
+
+**Final `webpack.prod.js` Structure**
 
 <details>
 <summary>webpack.prod.js</summary>
