@@ -148,7 +148,7 @@ Add the following contents and configure based on your use case
 And then install the dependenices 
 
 ```
-cd ~/Sites/ts_frontend
+cd ~/Sites/teacherseat/ts_frontend
 npm install
 ```
 
