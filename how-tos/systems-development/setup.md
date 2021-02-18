@@ -98,7 +98,7 @@ Using the node package `concurrently` we can build all our desired frontends in 
 Add a package.json in the `ts_frontend`
 
 ```
-touch ~/Sites/teacherseat/ts_frontend
+touch ~/Sites/teacherseat/ts_frontend/package.json
 ```
 
 Add the following contents and configure based on your use case
