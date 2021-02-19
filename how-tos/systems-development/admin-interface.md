@@ -233,7 +233,75 @@ After we generate our default `package.json`, we need to add **build** and **wat
 
 ### Buildspec.json
 
-This file is used by CodeBuild to build out the final code. 
+The `buildspec.yaml` file is used by `AWS CodeBuild`. The idea of the `buildspec.yaml` is that when we **tag** and **push** the code to GitHub, `CodeBuild` detects that we pushed a new **tag**, then builds out the updated code and saves into a `S3 Bucket` using the version that we defined in our `package.json`
+
+- **Build Steps:**
+
+  1. SSH Keys
+
+     - Create the `.ssh` folder
+     - Get the `id_rsa` (private key) from AWS SSM (Systems Manager) Parameter Store and add to our server in `~/.ssh/id_rsa`
+     - Change file permission to `400` (Owner can only read)
+     - Add github ssh key to `known_hosts`
+
+     ```Yaml
+       ## ---- We need the ID RSA so we can npm install ts_ui_admin
+       - "[[ -d ~/.ssh ]] || mkdir ~/.ssh"
+       - aws ssm get-parameter --name /teacherseat/service-assets/ID_RSA --with-decryption --query Parameter.Value --output text | tee ~/.ssh/id_rsa >/dev/null
+       - chmod 400 ~/.ssh/id_rsa
+       - touch ~/.ssh/known_hosts
+       - "ssh-keygen -F github.com || ssh-keyscan github.com >>~/.ssh/known_hosts"
+     ```
+
+  2. Install `ci`
+
+     ```Yaml
+       # ----- Install Packages
+       # https://docs.npmjs.com/cli/v6/commands/npm-ci
+       - npm ci
+     ```
+
+  3. Build assets
+
+     - Creates and saves the `OUTPUT_PATH` into `production.env`
+     - Run the build
+     - Get the `package.json` version, so we can use in the post build step
+
+       ```Yaml
+         ## ----- Build
+         - cd $CODEBUILD_SRC_DIR
+         - echo "OUTPUT_PATH=$CODEBUILD_SRC_DIR" | tee production.env
+         - npm run build
+         - "VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | xargs)"
+         - echo "$BUCKET"
+         - echo "$NAMESPACE"
+         - echo "$VERSION"
+       ```
+
+- **Post Build Steps:**
+
+  - Saves the build out **JavaScripts** and **StyleSheets** into a `S3 Bucket` sorted by version
+
+    ```Yaml
+      post_build:
+        commands:
+          - aws s3 cp "$CODEBUILD_SRC_DIR/javascripts/$NAMESPACE.js"  "s3://$BUCKET/$NAMESPACE/$VERSION/$NAMESPACE.$VERSION.js"
+          - aws s3 cp "$CODEBUILD_SRC_DIR/stylesheets/$NAMESPACE.css" "s3://$BUCKET/$NAMESPACE/$VERSION/$NAMESPACE.$VERSION.css"
+    ```
+
+    ```Bash
+      s3://$BUCKET/$NAMESPACE/$VERSION/$NAMESPACE.$VERSION.js
+
+      # s3://teacherseat-service-assets/ts_ui_admin_ten/1.0.0/ts_ui_admin_ten.1.0.0.js
+      #                  |                      |         |          |          |    |
+      #                  |                      |         |          |          |    └── extension
+      #                  |                      |         |          |          └── package.json version
+      #                  |                      |         |          └── namespace
+      #                  |                      |         └── package.json version
+      #                  |                      └── namespace
+      #                  └── s3 bucket
+    ```
+
 
 **Final `buildspec.yaml` Structure**
 
@@ -277,6 +345,59 @@ phases:
 </p>
 </details>
 
+
+#### Server / AWS Deployment
+
+In our **codebase** we have a folder called `aws` that has a bunch of `bash scripts`
+
+- In there we have a script called `aws/deployment/after_install/pull_ts_assets.sh`
+
+  - This scripts is responsible for copying new assets to our public folder (`javascripts` and `stylesheets`)
+  - Since we are creating a new asset, we need to add:
+
+    ```Bash
+      ...
+      ADMIN_TEN=1.0.0 # version 1.0.0 (same package.json version)
+
+      ...
+      echo "== s3 copy ts_ui_admin_ten... "
+      aws s3 cp s3://$BUCKET/ts_ui_admin_ten/$ADMIN_TEN/ts_ui_admin_ten.$ADMIN_TEN.js  $PUBLIC/javascripts/ts_ui_admin_ten.$ADMIN_TEN.js
+      aws s3 cp s3://$BUCKET/ts_ui_admin_ten/$ADMIN_TEN/ts_ui_admin_ten.$ADMIN_TEN.css $PUBLIC/stylesheets/ts_ui_admin_ten.$ADMIN_TEN.css
+    ```
+
+  ```Bash
+    #!/usr/bin/env bash
+
+    BUCKET=teacherseat-service-assets
+    PUBLIC=/home/ec2-user/app/public
+
+    ADMIN_DSH=1.3.1
+    ADMIN_SYS=1.2.3
+    ADMIN_IAM=1.3.5
+    ADMIN_PAY=1.2.3
+    ADMIN_TEN=1.0.0
+
+    echo "== s3 copy ts_ui_admin_dsh... "
+    aws s3 cp s3://$BUCKET/ts_ui_admin_dsh/$ADMIN_DSH/ts_ui_admin_dsh.$ADMIN_DSH.js  $PUBLIC/javascripts/ts_ui_admin_dsh.$ADMIN_DSH.js
+    aws s3 cp s3://$BUCKET/ts_ui_admin_dsh/$ADMIN_DSH/ts_ui_admin_dsh.$ADMIN_DSH.css $PUBLIC/stylesheets/ts_ui_admin_dsh.$ADMIN_DSH.css
+
+    echo "== s3 copy ts_ui_admin_sys... "
+    aws s3 cp s3://$BUCKET/ts_ui_admin_sys/$ADMIN_SYS/ts_ui_admin_sys.$ADMIN_SYS.js  $PUBLIC/javascripts/ts_ui_admin_sys.$ADMIN_SYS.js
+    aws s3 cp s3://$BUCKET/ts_ui_admin_sys/$ADMIN_SYS/ts_ui_admin_sys.$ADMIN_SYS.css $PUBLIC/stylesheets/ts_ui_admin_sys.$ADMIN_SYS.css
+
+    echo "== s3 copy ts_ui_admin_iam... "
+    aws s3 cp s3://$BUCKET/ts_ui_admin_iam/$ADMIN_IAM/ts_ui_admin_iam.$ADMIN_IAM.js  $PUBLIC/javascripts/ts_ui_admin_iam.$ADMIN_IAM.js
+    aws s3 cp s3://$BUCKET/ts_ui_admin_iam/$ADMIN_IAM/ts_ui_admin_iam.$ADMIN_IAM.css $PUBLIC/stylesheets/ts_ui_admin_iam.$ADMIN_IAM.css
+
+    echo "== s3 copy ts_ui_admin_pay... "
+    aws s3 cp s3://$BUCKET/ts_ui_admin_pay/$ADMIN_PAY/ts_ui_admin_pay.$ADMIN_PAY.js  $PUBLIC/javascripts/ts_ui_admin_pay.$ADMIN_PAY.js
+    aws s3 cp s3://$BUCKET/ts_ui_admin_pay/$ADMIN_PAY/ts_ui_admin_pay.$ADMIN_PAY.css $PUBLIC/stylesheets/ts_ui_admin_pay.$ADMIN_PAY.css
+
+    echo "== s3 copy ts_ui_admin_ten... "
+    aws s3 cp s3://$BUCKET/ts_ui_admin_ten/$ADMIN_TEN/ts_ui_admin_ten.$ADMIN_TEN.js  $PUBLIC/javascripts/ts_ui_admin_ten.$ADMIN_TEN.js
+    aws s3 cp s3://$BUCKET/ts_ui_admin_ten/$ADMIN_TEN/ts_ui_admin_ten.$ADMIN_TEN.css $PUBLIC/stylesheets/ts_ui_admin_ten.$ADMIN_TEN.css
+  ```
+
 ---
 
 ### Development.env
@@ -296,6 +417,54 @@ MOUNT_PATH='/example_spot'
 
 ### Webpack.dev.js & Webpack.prod.js
 
+These are only few differences between these two files.
+
+In the ```webpack.prod.js``` a compressor is used to minify the files.
+
+```js
+const minifier = new TerserPlugin({
+  terserOptions: {
+    mangle: true,
+    toplevel: true,
+    keep_fnames: false,
+    keep_classnames: true
+  }
+})
+```
+
+In the ```webpack.dev.js```, we manually load the ```development.env``` file based on the ```TS_PROFILE``` environment variable that is passed.
+```js
+let env_filename = ''
+console.log('TS_PROFILE')
+console.log(process.env.TS_PROFILE)
+if (process.env.TS_PROFILE) {
+  env_filename = `development.${process.env.TS_PROFILE}.env`
+} else {
+  env_filename = 'development.env'
+}
+```
+
+However, for production, only the ```production.env``` file is loaded which is automatically created in the ```buildspec.yaml``` file. 
+
+There is a default library that is shared among all ```teacherseat``` interfaces with base UI components.
+```js
+'shared/components' : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/components/'),
+'shared/services'   : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/services/'),
+'shared/views'      : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/views/')
+```
+
+These come from the ```ts_ui_admin``` interface. More components will be added soon.
+
+Few changes needs to be made when copying these files over for your admin interface.
+
+In both the ```webpack.dev.js``` and ```webpack.prod.js```, the interface's name needs to be chaged.
+
+In the ```module.exports``` function: 
+
+```js
+'stylesheets/<provider>_ui_<namespace>_<interface>_<sub-interface>' : path.resolve(__dirname, 'stylesheets/style.sass'),
+'javascripts/<provider>_ui_<namespace>_<interface>_<sub-interface>' : path.resolve(__dirname, 'javascripts/app.coffee')
+```
 
 **Final `webpack.dev.js` Structure**
 
@@ -486,55 +655,6 @@ module.exports = {
 }
 ```
 </details>
-
-These are only few differences between these two files.
-
-In the ```webpack.prod.js``` a compressor is used to minify the files.
-
-```js
-const minifier = new TerserPlugin({
-  terserOptions: {
-    mangle: true,
-    toplevel: true,
-    keep_fnames: false,
-    keep_classnames: true
-  }
-})
-```
-
-In the ```webpack.dev.js```, we manually load the ```development.env``` file based on the ```TS_PROFILE``` environment variable that is passed.
-```js
-let env_filename = ''
-console.log('TS_PROFILE')
-console.log(process.env.TS_PROFILE)
-if (process.env.TS_PROFILE) {
-  env_filename = `development.${process.env.TS_PROFILE}.env`
-} else {
-  env_filename = 'development.env'
-}
-```
-
-However, for production, only the ```production.env``` file is loaded which is automatically created in the ```buildspec.yaml``` file. 
-
-There is a default library that is shared among all ```teacherseat``` interfaces with base UI components.
-```js
-'shared/components' : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/components/'),
-'shared/services'   : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/services/'),
-'shared/views'      : path.resolve(__dirname, 'node_modules/ts_ui_admin/javascripts/views/')
-```
-
-These come from the ```ts_ui_admin``` interface. More components will be added soon.
-
-Few changes needs to be made when copying these files over for your admin interface.
-
-In both the ```webpack.dev.js``` and ```webpack.prod.js```, the interface's name needs to be chaged.
-
-In the ```module.exports``` function: 
-
-```js
-'stylesheets/<provider>_ui_<namespace>_<interface>_<sub-interface>' : path.resolve(__dirname, 'stylesheets/style.sass'),
-'javascripts/<provider>_ui_<namespace>_<interface>_<sub-interface>' : path.resolve(__dirname, 'javascripts/app.coffee')
-```
 
 TO DO: 
 
