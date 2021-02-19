@@ -14,6 +14,7 @@
     - Student System
     - Student Interface
     - [Admin System](how-tos/systems-development/admin-system.md)
-    - Admin Interface
+    - [Admin Interface](how-tos/systems-development/admin-interface.md)
+    - Teacherseat.json Configuration
     - SDK System
   - Service Deployment
