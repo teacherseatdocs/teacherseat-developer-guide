@@ -482,6 +482,41 @@ module.exports = {
 ```
 </details>
 
+--- 
+
+> **!Disclaimer**: In order to get the `Admin` panel running, you need to add the following
+
+**Copy shared libraries**
+- Copy `javascripts/lib` and `stylesheets/lib` from other existing interface to your folders
+- In `stylesheets/style.sass`, add the shared stylesheets
+  ```sass
+  @import shared/breakpoints
+  @import shared/default
+  @import shared/index
+  @import shared/show
+  @import shared/form
+  @import shared/field
+  @import shared/form_header
+  @import shared/markdown
+  @import shared/header
+  @import shared/page_heading
+  @import shared/popup
+  @import shared/table
+  @import shared/delete_popup
+  @import shared/notfound
+  @import shared/components/button
+  @import shared/components/button_group
+  @import shared/components/button_drop
+  @import shared/components/icon
+  @import shared/components/layouts
+  @import shared/components/breadcrumbs
+  @import shared/components/details_table
+  @import shared/components/section
+  @import shared/components/divider
+  @import shared/components/manage_view
+  ```
+
+
 ---
 
 
